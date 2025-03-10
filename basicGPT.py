@@ -199,14 +199,13 @@ class GPTLanguageModel(nn.Module):
         return idx
 
 model = GPTLanguageModel()
-model = model.to(device)  # Add this line to move model to GPU
+model = model.to(device) 
 print(f"Model created on: {next(model.parameters()).device}")
 model = model.to(device)
 print(f"Model moved to: {next(model.parameters()).device}")
 # print the number of parameters in the model
 print(sum(p.numel() for p in model.parameters())/1e6, 'M parameters')
 
-# create a PyTorch optimizer
 optimizer = torch.optim.AdamW(model.parameters(), lr=learning_rate)
 print("starting optimization...")
 for iter in range(max_iters):
@@ -215,14 +214,9 @@ for iter in range(max_iters):
         print("initial loss:", estimate_loss())
         print("First iteration loss calculation complete")
 
-    # Add more frequent reporting for debugging
-    if iter % 10 == 0:  # Print more frequently
+    if iter % 10 == 0:
         print(f"Completed iteration {iter}")
 
-    # every once in a while evaluate the loss on train and val sets
-    if iter % eval_interval == 0 or iter == max_iters - 1:
-        losses = estimate_loss()
-        print(f"step {iter}: train loss {losses['train']:.4f}, val loss {losses['val']:.4f}")
 
     # sample a batch of data
     xb, yb = get_batch('train')
